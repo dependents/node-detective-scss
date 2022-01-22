@@ -1,53 +1,53 @@
+/* eslint-env mocha */
+
 'use strict';
 
-const detective = require('../');
 const assert = require('assert');
+const detective = require('../index.js');
 
-describe('detective-scss', function() {
-  function test(src, deps, opts) {
-    assert.deepEqual(detective(src, opts), deps);
-  }
+function test(source, dependencies, options) {
+  assert.deepEqual(detective(source, options), dependencies);
+}
 
-  describe('throws', function() {
-    it('does not throw for empty files', function() {
-      assert.doesNotThrow(function() {
+describe('detective-scss', () => {
+  describe('error handling', () => {
+    it('does not throw for empty files', () => {
+      assert.doesNotThrow(() => {
         detective('');
       });
     });
 
-    it('throws if the given content is not a string', function() {
-      assert.throws(function() {
-        detective(function() {});
-      });
+    it('throws if the given content is not a string', () => {
+      assert.throws(() => {
+        detective(() => {});
+      }, Error, 'content is not a string');
     });
 
-    it('throws if called with no arguments', function() {
-      assert.throws(function() {
+    it('throws if called with no arguments', () => {
+      assert.throws(() => {
         detective();
-      });
+      }, Error, 'src not given');
     });
 
-    it('does not throw on broken syntax', function() {
-      assert.doesNotThrow(function() {
+    it('does not throw on broken syntax', () => {
+      assert.doesNotThrow(() => {
         detective('@');
       });
     });
-  });
 
-  it('dangles the parsed AST', function() {
-    detective('@import "_foo.scss";');
-    assert.ok(detective.ast);
-  });
-
-  describe('when there is a parse error', function() {
-    it('supplies an empty object as the "parsed" ast', function() {
+    it('supplies an empty object as the "parsed" ast when there is a parse error', () => {
       detective('|');
       assert.deepEqual(detective.ast, {});
     });
   });
 
-  describe('scss', function() {
-    it('returns the dependencies of the given .scss file content', function() {
+  describe('scss', () => {
+    it('dangles the parsed AST', () => {
+      detective('@import "_foo.scss";');
+      assert.ok(detective.ast);
+    });
+
+    it('returns the dependencies of the given .scss file content', () => {
       test('@import "_foo.scss";', ['_foo.scss']);
       test('@import          "_foo.scss";', ['_foo.scss']);
       test('@import "_foo";', ['_foo']);
@@ -61,11 +61,11 @@ describe('detective-scss', function() {
       test('@import "_nested.scss"; body { color: blue; a { text-decoration: underline; }}', ['_nested.scss']);
     });
 
-    it('handles comma-separated imports (#2)', function() {
+    it('handles comma-separated imports (#2)', () => {
       test('@import "_foo.scss", "bar";', ['_foo.scss', 'bar']);
     });
 
-    it('allows imports with no semicolon', function() {
+    it('allows imports with no semicolon', () => {
       test('@import "_foo.scss"\n@import "_bar.scss"', ['_foo.scss', '_bar.scss']);
     });
   });

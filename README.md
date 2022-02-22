@@ -13,6 +13,7 @@ It's the SCSS counterpart to [detective](https://github.com/substack/node-detect
 ### Usage
 
 ```js
+const fs = require('fs');
 const detective = require('detective-scss');
 
 const content = fs.readFileSync('styles.scss', 'utf8');

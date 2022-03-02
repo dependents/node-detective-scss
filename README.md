@@ -1,4 +1,4 @@
-### detective-scss [![CI](https://github.com/dependents/node-detective-scss/actions/workflows/ci.yml/badge.svg)](https://github.com/dependents/node-detective-scss/actions/workflows/ci.yml) [![npm](https://img.shields.io/npm/v/detective-scss)](https://www.npmjs.com/package/detective-scss) [![npm](https://img.shields.io/npm/dm/detective-scss)](https://www.npmjs.com/package/detective-scss)
+### detective-scss [![CI](https://img.shields.io/github/workflow/status/dependents/node-detective-scss/CI/main?label=CI&logo=github)](https://github.com/dependents/node-detective-scss/actions/workflows/ci.yml?query=branch%3Amain) [![npm](https://img.shields.io/npm/v/detective-scss)](https://www.npmjs.com/package/detective-scss) [![npm](https://img.shields.io/npm/dm/detective-scss)](https://www.npmjs.com/package/detective-scss)
 
 > Find the dependencies of an scss file
 

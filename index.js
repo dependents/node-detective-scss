@@ -16,7 +16,6 @@ module.exports = function detective(fileContent) {
   if (typeof fileContent === 'undefined') throw new Error('content not given');
   if (typeof fileContent !== 'string') throw new Error('content is not a string');
 
-  let dependencies = [];
   let ast = {};
 
   try {
@@ -29,11 +28,12 @@ module.exports = function detective(fileContent) {
   detective.ast = ast;
 
   const walker = new Walker();
+  let dependencies = [];
 
-  walker.walk(ast, (node) => {
+  walker.walk(ast, node => {
     if (!isImportStatement(node)) return;
 
-    dependencies = dependencies.concat(extractDependencies(node));
+    dependencies = [...dependencies, ...extractDependencies(node)];
   });
 
   return dependencies;
@@ -49,13 +49,12 @@ function isImportStatement(node) {
 
   const importKeyword = atKeyword.content[0];
 
-  if (importKeyword.type !== 'ident' || importKeyword.content !== 'import') return false;
-
-  return true;
+  return ['ident', 'import'].includes(importKeyword.type);
 }
 
 function extractDependencies(importStatementNode) {
   return importStatementNode.content
-    .filter((innerNode) => innerNode.type === 'string' || innerNode.type === 'ident')
-    .map((identifierNode) => identifierNode.content.replace(/["']/g, ''));
+    .filter(innerNode => ['string', 'ident'].includes(innerNode.type))
+    .map(identifierNode => identifierNode.content.replace(/["']/g, ''));
 }
+

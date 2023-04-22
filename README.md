@@ -22,6 +22,9 @@ const content = fs.readFileSync('styles.scss', 'utf8');
 
 // list of imported file names (ex: '_foo.scss', '_foo', etc)
 const dependencies = detective(content);
+
+// or to also detect any url() references to images, fonts, etc.
+const allDependencies = detective(content, { url: true });
 ```
 
 ### Related

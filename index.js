@@ -10,12 +10,15 @@ const debug = debuglog('detective-scss');
  * Extract the @import statements from a given scss file's content
  *
  * @param  {String} fileContent
+ * @param  {Object} options
+ * @param  {Boolean} options.url - detect any url() references to images, fonts, etc.
  * @return {String[]}
  */
-module.exports = function detective(fileContent) {
+module.exports = function detective(fileContent, options) {
   if (typeof fileContent === 'undefined') throw new Error('content not given');
   if (typeof fileContent !== 'string') throw new Error('content is not a string');
 
+  const isUrlEnabled = options && options.url;
   let ast = {};
 
   try {
@@ -31,9 +34,14 @@ module.exports = function detective(fileContent) {
   let dependencies = [];
 
   walker.walk(ast, node => {
-    if (!isImportStatement(node)) return;
+    if (isImportStatement(node)) {
+      dependencies = [...dependencies, ...extractDependencies(node)];
+      return;
+    }
 
-    dependencies = [...dependencies, ...extractDependencies(node)];
+    if (isUrlEnabled && isUrlNode(node)) {
+      dependencies = [...dependencies, ...extractUriDependencies(node)];
+    }
   });
 
   return dependencies;
@@ -52,9 +60,18 @@ function isImportStatement(node) {
   return ['ident', 'import'].includes(importKeyword.type);
 }
 
+function isUrlNode(node) {
+  return node.type === 'uri';
+}
+
 function extractDependencies(importStatementNode) {
   return importStatementNode.content
     .filter(innerNode => ['string', 'ident'].includes(innerNode.type))
     .map(identifierNode => identifierNode.content.replace(/["']/g, ''));
 }
 
+function extractUriDependencies(importStatementNode) {
+  return importStatementNode.content
+    .filter(innerNode => ['string', 'ident', 'raw'].includes(innerNode.type))
+    .map(identifierNode => identifierNode.content.replace(/["']/g, ''));
+}

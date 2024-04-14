@@ -1,6 +1,6 @@
 {
   "name": "detective-scss",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "Find the dependencies of an scss file",
   "main": "index.js",
   "files": [

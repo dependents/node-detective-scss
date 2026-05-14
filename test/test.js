@@ -70,9 +70,17 @@ sassSuite('allows imports with no semicolon', () => {
   test('@import "_foo.scss"\n@import "_bar.scss"', ['_foo.scss', '_bar.scss']);
 });
 
-sassSuite('returns the url dependencies when enable url', () => {
+sassSuite('returns the url dependencies when url is enabled', () => {
   test(
-    '@font-face { font-family: "Trickster"; src: local("Trickster"), url("trickster-COLRv1.otf") format("opentype") tech(color-COLRv1), url("trickster-outline.otf") format("opentype"), url("trickster-outline.woff") format("woff"); }',
+    `
+      @font-face {
+        font-family: "Trickster";
+        src: local("Trickster"),
+          url("trickster-COLRv1.otf") format("opentype") tech(color-COLRv1),
+          url("trickster-outline.otf") format("opentype"),
+          url("trickster-outline.woff") format("woff");
+      }
+    `,
     [
       'trickster-COLRv1.otf',
       'trickster-outline.otf',

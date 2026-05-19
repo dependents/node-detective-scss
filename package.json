@@ -1,6 +1,6 @@
 {
   "name": "detective-scss",
-  "version": "5.0.2",
+  "version": "6.0.0",
   "description": "Find the dependencies of an scss file",
   "type": "module",
   "exports": {
